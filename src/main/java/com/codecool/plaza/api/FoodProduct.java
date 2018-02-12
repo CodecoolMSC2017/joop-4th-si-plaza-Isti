@@ -1,29 +1,31 @@
 package com.codecool.plaza.api;
 
+import java.util.Date;
+
 public class FoodProduct extends Product {
 
-    private String material;
-    private String type;
+    private int calories;
+    private Date bestBefore;
 
-    public FoodProduct(long barcode, String manufacturer, String material, String type) {
+    public FoodProduct(long barcode, String manufacturer, int calories, Date bestBefore) {
         super(barcode, manufacturer);
-        this.material = material;
-        this.type = type;
+        this.calories = calories;
+        this.bestBefore = bestBefore;
     }
 
-    public String getMaterial() {
-        return material;
+    public boolean isStillConsumable() {
+        return false;
     }
 
-    public String getType() {
-        return type;
+    public int getCalories() {
+        return calories;
     }
 
     @Override
     public String toString() {
         return "FoodProduct{" +
-                "material='" + material + '\'' +
-                ", type='" + type + '\'' +
+                "calories=" + calories +
+                ", bestBefore=" + bestBefore +
                 ", barcode=" + barcode +
                 ", manufacturer='" + manufacturer + '\'' +
                 '}';
