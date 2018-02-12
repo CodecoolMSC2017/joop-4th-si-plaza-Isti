@@ -18,7 +18,11 @@ public abstract class Product {
         return manufacturer;
     }
 
+    @Override
     public String toString() {
-        return null;
+        return "Product{" +
+                "barcode=" + barcode +
+                ", manufacturer='" + manufacturer + '\'' +
+                '}';
     }
 }

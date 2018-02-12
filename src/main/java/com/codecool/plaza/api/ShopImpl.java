@@ -54,6 +54,15 @@ public class ShopImpl implements Shop {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "ShopImpl{" +
+                "name='" + name + '\'' +
+                ", owner='" + owner + '\'' +
+                ", products=" + products +
+                '}';
+    }
+
     class ShopEntry {
 
         private Product product;
@@ -98,8 +107,13 @@ public class ShopImpl implements Shop {
 
         }
 
+        @Override
         public String toString() {
-            return null;
+            return "ShopEntry{" +
+                    "product=" + product +
+                    ", quantity=" + quantity +
+                    ", price=" + price +
+                    '}';
         }
     }
 }

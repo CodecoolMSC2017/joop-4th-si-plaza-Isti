@@ -10,7 +10,7 @@ public class PlazaImpl implements Plaza {
     }
 
     public List<Shop> getShops() throws PlazaIsClosedException {
-        return null;
+        return shops;
     }
 
     public void addShop(Shop shop) throws ShopAlreadyExistsException, PlazaIsClosedException {
@@ -35,5 +35,12 @@ public class PlazaImpl implements Plaza {
 
     public void close() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "PlazaImpl{" +
+                "shops=" + shops +
+                '}';
     }
 }
