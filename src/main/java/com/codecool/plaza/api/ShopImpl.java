@@ -60,28 +60,71 @@ public class ShopImpl implements Shop {
 
     public void addNewProduct(Product product, int quantity, float price) throws ProductAlreadyExistsException, ShopIsClosedException {
         checkIfOpen();
+        checkIfProductExists(product);
+        ShopEntry entry = new ShopEntry(product, quantity, price);
+        long barcode = generateBarcode();
+        products.put(barcode, entry);
+    }
 
+    private long generateBarcode() {
+        long range = 1234567L;
+        Random r = new Random();
+        return (long) (r.nextDouble() * range);
     }
 
     public void addProduct(long barcode, int quantity) throws NoSuchProductException, ShopIsClosedException {
         checkIfOpen();
-
+        checkIfProductExists(barcode);
+        products.get(barcode).increaseQuantity(quantity);
     }
 
     public Product buyProduct(long barcode) throws NoSuchProductException, ShopIsClosedException {
         checkIfOpen();
-        return null;
+        checkIfProductExists(barcode);
+        return products.get(barcode).getProduct();
     }
 
     public List<Product> buyProducts(long barcode, int quantity) throws NoSuchProductException, OutOfStockException, ShopIsClosedException {
         checkIfOpen();
-        return null;
+        if (products.get(barcode) == null) {
+            throw new NoSuchProductException();
+        }
+        checkIfInStock(barcode);
+        List<Product> result = new ArrayList<>();
+        for (int i = 0; i < quantity; i++) {
+            result.add(products.get(barcode).getProduct());
+        }
+        return result;
     }
 
     private void checkIfOpen() throws ShopIsClosedException {
         if (!isOpen) {
             throw new ShopIsClosedException();
         }
+    }
+
+    private void checkIfInStock(long barcode) throws OutOfStockException {
+        Product product = products.get(barcode).getProduct();
+        if (product == null || products.get(barcode).getQuantity() == 0) {
+            throw new OutOfStockException();
+        }
+    }
+
+    private void checkIfProductExists(long barcode) throws NoSuchProductException {
+        if (products.get(barcode) == null) {
+            throw new NoSuchProductException();
+        }
+    }
+
+    private void checkIfProductExists(Product product) throws ProductAlreadyExistsException {
+        Product currentProduct;
+        for (Long barcode : products.keySet()) {
+            currentProduct = products.get(barcode).getProduct();
+            if (currentProduct.equals(product)) {
+                return;
+            }
+        }
+        throw new ProductAlreadyExistsException();
     }
 
     @Override
