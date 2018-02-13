@@ -1,21 +1,17 @@
 package com.codecool.plaza.api;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ShopImpl implements Shop {
 
     private String name;
     private String owner;
-    private boolean isOpen;
-    private Map<Long, ShopEntry> products;
+    private boolean isOpen = true;
+    private Map<Long, ShopEntry> products = new HashMap<>();
 
     public ShopImpl(String name, String owner) {
         this.name = name;
         this.owner = owner;
-        isOpen = true;
     }
 
     public String getName() {
@@ -41,9 +37,8 @@ public class ShopImpl implements Shop {
     public List<Product> findByName(String name) throws ShopIsClosedException {
         checkIfOpen();
         List<Product> result = new ArrayList<>();
-        Set<Long> barcodes = products.keySet();
         Product product;
-        for (Long barcode : barcodes) {
+        for (Long barcode : products.keySet()) {
             product = products.get(barcode).getProduct();
             if (product.getName().equals(name)) {
                 result.add(product);
@@ -54,6 +49,12 @@ public class ShopImpl implements Shop {
 
     public boolean hasProduct(long barcode) throws ShopIsClosedException {
         checkIfOpen();
+        Set<Long> barcodes = products.keySet();
+        for (Long bCode : barcodes) {
+            if (bCode.equals(barcode)) {
+                return true;
+            }
+        }
         return false;
     }
 
