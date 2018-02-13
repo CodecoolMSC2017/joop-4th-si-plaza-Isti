@@ -2,12 +2,18 @@ package com.codecool.plaza.api;
 
 public abstract class Product {
 
+    protected String name;
     protected long barcode;
     protected String manufacturer;
 
-    protected Product(long barcode, String manufacturer) {
+    protected Product(String name, long barcode, String manufacturer) {
+        this.name = name;
         this.barcode = barcode;
         this.manufacturer = manufacturer;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public long getBarcode() {

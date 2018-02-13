@@ -1,61 +1,86 @@
 package com.codecool.plaza.api;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ShopImpl implements Shop {
 
     private String name;
     private String owner;
+    private boolean isOpen;
     private Map<Long, ShopEntry> products;
 
     public ShopImpl(String name, String owner) {
         this.name = name;
         this.owner = owner;
+        isOpen = true;
     }
 
     public String getName() {
-        return null;
+        return name;
     }
 
     public String getOwner() {
-        return null;
+        return owner;
     }
 
     public boolean isOpen() {
-        return false;
+        return isOpen;
     }
 
     public void open() {
-
+        isOpen = true;
     }
 
     public void close() {
-
+        isOpen = false;
     }
 
     public List<Product> findByName(String name) throws ShopIsClosedException {
-        return null;
+        checkIfOpen();
+        List<Product> result = new ArrayList<>();
+        Set<Long> barcodes = products.keySet();
+        Product product;
+        for (Long barcode : barcodes) {
+            product = products.get(barcode).getProduct();
+            if (product.getName().equals(name)) {
+                result.add(product);
+            }
+        }
+        return result;
     }
 
     public boolean hasProduct(long barcode) throws ShopIsClosedException {
+        checkIfOpen();
         return false;
     }
 
     public void addNewProduct(Product product, int quantity, float price) throws ProductAlreadyExistsException, ShopIsClosedException {
+        checkIfOpen();
 
     }
 
     public void addProduct(long barcode, int quantity) throws NoSuchProductException, ShopIsClosedException {
+        checkIfOpen();
 
     }
 
     public Product buyProduct(long barcode) throws NoSuchProductException, ShopIsClosedException {
+        checkIfOpen();
         return null;
     }
 
     public List<Product> buyProducts(long barcode, int quantity) throws NoSuchProductException, OutOfStockException, ShopIsClosedException {
+        checkIfOpen();
         return null;
+    }
+
+    private void checkIfOpen() throws ShopIsClosedException {
+        if (!isOpen) {
+            throw new ShopIsClosedException();
+        }
     }
 
     @Override
@@ -80,35 +105,35 @@ public class ShopImpl implements Shop {
         }
 
         public Product getProduct() {
-            return null;
+            return product;
         }
 
         public void setProduct(Product product) {
-
+            this.product = product;
         }
 
         public int getQuantity() {
-            return 0;
+            return quantity;
         }
 
         public void setQuantity(int quantity) {
-
+            this.quantity = quantity;
         }
 
         public void increaseQuantity(int amount) {
-
+            quantity += amount;
         }
 
         public void decreaseQuantity(int amount) {
-
+            quantity -= amount;
         }
 
         public float getPrice() {
-            return 0;
+            return price;
         }
 
         public void setPrice(int price) {
-
+            this.price = price;
         }
 
         @Override

@@ -7,8 +7,8 @@ public class FoodProduct extends Product {
     private int calories;
     private Date bestBefore;
 
-    public FoodProduct(long barcode, String manufacturer, int calories, Date bestBefore) {
-        super(barcode, manufacturer);
+    public FoodProduct(String name, long barcode, String manufacturer, int calories, Date bestBefore) {
+        super(name, barcode, manufacturer);
         this.calories = calories;
         this.bestBefore = bestBefore;
     }

@@ -5,8 +5,8 @@ public class ClothingProduct extends Product {
     private String material;
     private String type;
 
-    public ClothingProduct(long barcode, String manufacturer, String material, String type) {
-        super(barcode, manufacturer);
+    public ClothingProduct(String name, long barcode, String manufacturer, String material, String type) {
+        super(name, barcode, manufacturer);
         this.material = material;
         this.type = type;
     }
