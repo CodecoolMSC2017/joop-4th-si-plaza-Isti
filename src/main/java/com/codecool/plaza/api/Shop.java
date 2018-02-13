@@ -22,7 +22,7 @@ public interface Shop {
 
     public void addProduct(long barcode, int quantity) throws NoSuchProductException, ShopIsClosedException;
 
-    public Product buyProduct(long barcode) throws NoSuchProductException, ShopIsClosedException;
+    public Product buyProduct(long barcode) throws NoSuchProductException, ShopIsClosedException, OutOfStockException;
 
     public List<Product> buyProducts(long barcode, int quantity) throws NoSuchProductException, OutOfStockException, ShopIsClosedException;
 

@@ -22,6 +22,10 @@ public class ShopImpl implements Shop {
         return owner;
     }
 
+    public Map<Long, ShopEntry> getProducts() {
+        return products;
+    }
+
     public boolean isOpen() {
         return isOpen;
     }
@@ -62,14 +66,8 @@ public class ShopImpl implements Shop {
         checkIfOpen();
         checkIfProductExists(product);
         ShopEntry entry = new ShopEntry(product, quantity, price);
-        long barcode = generateBarcode();
+        long barcode = product.getBarcode();
         products.put(barcode, entry);
-    }
-
-    private long generateBarcode() {
-        long range = 1234567L;
-        Random r = new Random();
-        return (long) (r.nextDouble() * range);
     }
 
     public void addProduct(long barcode, int quantity) throws NoSuchProductException, ShopIsClosedException {
@@ -78,28 +76,38 @@ public class ShopImpl implements Shop {
         products.get(barcode).increaseQuantity(quantity);
     }
 
-    public Product buyProduct(long barcode) throws NoSuchProductException, ShopIsClosedException {
+    public Product buyProduct(long barcode) throws NoSuchProductException, ShopIsClosedException, OutOfStockException {
         checkIfOpen();
         checkIfProductExists(barcode);
-        return products.get(barcode).getProduct();
+        checkIfInStock(barcode);
+        ShopEntry entry = products.get(barcode);
+        entry.decreaseQuantity(1);
+        return entry.getProduct();
     }
 
     public List<Product> buyProducts(long barcode, int quantity) throws NoSuchProductException, OutOfStockException, ShopIsClosedException {
         checkIfOpen();
-        if (products.get(barcode) == null) {
-            throw new NoSuchProductException();
-        }
-        checkIfInStock(barcode);
+        checkIfProductExists(barcode);
+        checkIfInStock(barcode, quantity);
         List<Product> result = new ArrayList<>();
+        ShopEntry entry = products.get(barcode);
         for (int i = 0; i < quantity; i++) {
-            result.add(products.get(barcode).getProduct());
+            result.add(entry.getProduct());
         }
+        entry.decreaseQuantity(quantity);
         return result;
     }
 
     private void checkIfOpen() throws ShopIsClosedException {
         if (!isOpen) {
             throw new ShopIsClosedException();
+        }
+    }
+
+    private void checkIfInStock(long barcode, int quantity) throws OutOfStockException {
+        Product product = products.get(barcode).getProduct();
+        if (product == null || products.get(barcode).getQuantity() < quantity) {
+            throw new OutOfStockException();
         }
     }
 
@@ -121,10 +129,9 @@ public class ShopImpl implements Shop {
         for (Long barcode : products.keySet()) {
             currentProduct = products.get(barcode).getProduct();
             if (currentProduct.equals(product)) {
-                return;
+                throw new ProductAlreadyExistsException();
             }
         }
-        throw new ProductAlreadyExistsException();
     }
 
     @Override
