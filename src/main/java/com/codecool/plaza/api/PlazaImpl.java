@@ -36,12 +36,11 @@ public class PlazaImpl implements Plaza {
         if (!isOpen) {
             throw new PlazaIsClosedException();
         }
-        int index = 0;
-        for (Shop sShop : shops) {
-            if (sShop.equals(shop)) {
-                shops.remove(index);
+        for (int i = 0; i < shops.size(); i++) {
+            if (shops.get(i).equals(shop)) {
+                shops.remove(i);
+                return;
             }
-            index++;
         }
         throw new NoSuchShopException();
     }
