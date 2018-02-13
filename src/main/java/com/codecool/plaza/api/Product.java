@@ -27,7 +27,8 @@ public abstract class Product {
     @Override
     public String toString() {
         return "Product{" +
-                "barcode=" + barcode +
+                "name='" + name + '\'' +
+                ", barcode=" + barcode +
                 ", manufacturer='" + manufacturer + '\'' +
                 '}';
     }
