@@ -1,4 +1,4 @@
 package com.codecool.plaza.api;
 
-public class NoSuchShopException extends Exception {
+public class NoSuchShopException extends ShopException {
 }
