@@ -24,5 +24,7 @@ public interface Shop {
 
     public Product buyProduct(long barcode) throws NoSuchProductException, ShopIsClosedException;
 
+    public List<Product> buyProducts(long barcode, int quantity) throws NoSuchProductException, OutOfStockException, ShopIsClosedException;
+
     public String toString();
 }

@@ -54,6 +54,10 @@ public class ShopImpl implements Shop {
         return null;
     }
 
+    public List<Product> buyProducts(long barcode, int quantity) throws NoSuchProductException, OutOfStockException, ShopIsClosedException {
+        return null;
+    }
+
     @Override
     public String toString() {
         return "ShopImpl{" +
