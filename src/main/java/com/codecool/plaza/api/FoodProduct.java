@@ -14,7 +14,7 @@ public class FoodProduct extends Product {
     }
 
     public boolean isStillConsumable() {
-        return false;
+        return new Date().before(bestBefore);
     }
 
     public int getCalories() {
