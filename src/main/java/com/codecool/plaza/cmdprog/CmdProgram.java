@@ -1,7 +1,6 @@
 package com.codecool.plaza.cmdprog;
 
-import com.codecool.plaza.api.PlazaImpl;
-import com.codecool.plaza.api.Product;
+import com.codecool.plaza.api.*;
 
 import java.util.List;
 import java.util.Scanner;
@@ -16,17 +15,20 @@ public class CmdProgram {
     }
 
     public void run() {
+        label:
         while (true) {
             displayMenu(texts.mainMenuTitle, texts.mainMenuOptions);
             String choice = userInput.nextLine();
-            if (choice.equals("0")) {
-                break;
-            } else if (choice.equals("1")) {
-                PlazaImpl plaza = createNewPlaza();
-                plazaMenu(plaza);
-                break;
-            } else {
-                System.out.println(texts.unknownCommandMessage);
+            switch (choice) {
+                case "0":
+                    break label;
+                case "1":
+                    PlazaImpl plaza = createNewPlaza();
+                    plazaMenu(plaza);
+                    break label;
+                default:
+                    System.out.println(texts.unknownCommandMessage);
+                    break;
             }
         }
         System.out.println(texts.exitMessage);
@@ -34,28 +36,125 @@ public class CmdProgram {
     }
 
     private void plazaMenu(PlazaImpl plaza) {
+        label:
         while (true) {
             displayMenu(texts.plazaMenuTitle(plaza), texts.plazaMenuOptions);
             String choice = userInput.nextLine();
-            if (choice.equals("0")) {
-                break;
-            } else if (choice.equals("1")) {
-                break;
-            } else if (choice.equals("2")) {
-                break;
-            } else if (choice.equals("3")) {
-                break;
-            } else if (choice.equals("4")) {
-                break;
-            } else if (choice.equals("5")) {
-                break;
-            } else if (choice.equals("6")) {
-                break;
-            } else if (choice.equals("7")) {
-                break;
-            } else {
-                System.out.println(texts.unknownCommandMessage);
+            switch (choice) {
+                case "0":
+                    break label;
+                case "1":
+                    listShops(plaza);
+                    break;
+                case "2":
+                    addNewShop(plaza);
+                    break;
+                case "3":
+                    removeShop(plaza);
+                    break;
+                case "4":
+                    enterShop(plaza);
+                    break;
+                case "5":
+                    openPlaza(plaza);
+                    break;
+                case "6":
+                    closePlaza(plaza);
+                    break;
+                case "7":
+                    checkIfOpen(plaza);
+                    break;
+                default:
+                    System.out.println(texts.unknownCommandMessage);
+                    break;
             }
+        }
+    }
+
+    private void enterShop(PlazaImpl plaza) {
+    }
+
+    private void removeShop(PlazaImpl plaza) {
+        try {
+            Shop shop = selectShop(plaza);
+            plaza.removeShop(shop);
+            System.out.println(texts.shopRemoved);
+        } catch (PlazaIsClosedException e) {
+            System.out.println(texts.plazaIsClosed);
+        } catch (NoSuchShopException | IndexOutOfBoundsException e) {
+            System.out.println(texts.noSuchShop);
+        }
+    }
+
+    private Shop selectShop(PlazaImpl plaza) throws PlazaIsClosedException, IndexOutOfBoundsException {
+        List<Shop> shops = plaza.getShops();
+        String[] shopArray = new String[shops.size()];
+        int counter = 0;
+        for (Shop shop : shops) {
+            shopArray[counter] = shop.toString();
+            counter++;
+        }
+        while (true) {
+            try {
+                displayMenu(texts.selectShop, shopArray);
+                String choice = userInput.nextLine();
+                int choiceNumber = Integer.parseInt(choice);
+                return shops.get(choiceNumber);
+            } catch (NumberFormatException e) {
+                System.out.println(texts.notANumber);
+            }
+        }
+    }
+
+    private void addNewShop(PlazaImpl plaza) {
+        System.out.println(texts.enterShopName);
+        String name = userInput.nextLine();
+        System.out.println(texts.enterShopOwner);
+        String owner = userInput.nextLine();
+        Shop shop = new ShopImpl(name, owner);
+        try {
+            plaza.addShop(shop);
+        } catch (ShopAlreadyExistsException e) {
+            System.out.println(texts.shopAlreadyExists);
+            return;
+        } catch (PlazaIsClosedException e) {
+            System.out.println(texts.plazaIsClosed);
+            return;
+        }
+        System.out.println(texts.shopAdded);
+    }
+
+    private void openPlaza(PlazaImpl plaza) {
+        plaza.open();
+        System.out.println(texts.plazaIsOpen);
+    }
+
+    private void closePlaza(PlazaImpl plaza) {
+        plaza.close();
+        System.out.println(texts.plazaIsClosed);
+    }
+
+    private void checkIfOpen(PlazaImpl plaza) {
+        if (plaza.isOpen()) {
+            System.out.println(texts.plazaIsOpen);
+        } else {
+            System.out.println(texts.plazaIsClosed);
+        }
+    }
+
+    private void listShops(PlazaImpl plaza) {
+        List<Shop> shops;
+        try {
+            shops = plaza.getShops();
+        } catch (PlazaIsClosedException e) {
+            System.out.println(texts.plazaIsClosed);
+            return;
+        }
+        if (shops.size() == 0) {
+            System.out.println(texts.noShops);
+        }
+        for (Shop shop : shops) {
+            System.out.println(shop);
         }
     }
 
@@ -90,10 +189,7 @@ public class CmdProgram {
         final String createPlazaTitle = "Name your plaza!";
 
         String plazaMenuTitle(PlazaImpl plaza) {
-            StringBuilder sb = new StringBuilder("You are in ");
-            sb.append(plaza.getName());
-            sb.append(" plaza! Choose a command.");
-            return sb.toString();
+            return "You are in " + plaza.getName() + " plaza! Choose a command.";
         }
 
         final String[] plazaMenuOptions = new String[]{
@@ -106,5 +202,18 @@ public class CmdProgram {
                 "Close the plaza",
                 "Check if the plaza is open or not"
         };
+
+        final String plazaIsClosed = "Plaza is closed!";
+        final String plazaIsOpen = "Plaza is open!";
+        final String noShops = "There are no shops in the plaza.";
+        final String shopAlreadyExists = "Shop already exists!";
+        final String enterShopName = "Enter the name of the shop:";
+        final String enterShopOwner = "Enter the owner of the shop:";
+        final String shopAdded = "Shop added!";
+
+        final String selectShop = "Select a shop:";
+        final String notANumber = "Not a number!";
+        final String noSuchShop = "There is no such shop!";
+        final String shopRemoved = "Shop removed!";
     }
 }
