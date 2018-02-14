@@ -136,11 +136,9 @@ public class ShopImpl implements Shop {
 
     @Override
     public String toString() {
-        return "ShopImpl{" +
-                "name='" + name + '\'' +
-                ", owner='" + owner + '\'' +
-                ", products=" + products +
-                '}';
+        return "Shop " + name +
+                ", owner: " + owner +
+                ", products: " + products;
     }
 
     class ShopEntry {
