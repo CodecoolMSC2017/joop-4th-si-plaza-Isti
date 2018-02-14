@@ -16,7 +16,7 @@ class PlazaImplTest {
 
     @Test
     void addShop() throws ShopAlreadyExistsException, PlazaIsClosedException {
-        Shop shop = new ShopImpl("testName", "testOwner");
+        ShopImpl shop = new ShopImpl("testName", "testOwner");
 
         plaza.close();
         assertThrows(PlazaIsClosedException.class, () -> {
@@ -36,8 +36,8 @@ class PlazaImplTest {
 
     @Test
     void removeShop() throws ShopAlreadyExistsException, PlazaIsClosedException, NoSuchShopException {
-        Shop shop1 = new ShopImpl("testName1", "testOwner1");
-        Shop shop2 = new ShopImpl("testName2", "testOwner2");
+        ShopImpl shop1 = new ShopImpl("testName1", "testOwner1");
+        ShopImpl shop2 = new ShopImpl("testName2", "testOwner2");
         plaza.addShop(shop1);
 
         plaza.close();
@@ -66,8 +66,8 @@ class PlazaImplTest {
 
     @Test
     void findShopByName() throws ShopAlreadyExistsException, PlazaIsClosedException, NoSuchShopException {
-        Shop shop1 = new ShopImpl("testName1", "testOwner1");
-        Shop shop2 = new ShopImpl("testName2", "testOwner2");
+        ShopImpl shop1 = new ShopImpl("testName1", "testOwner1");
+        ShopImpl shop2 = new ShopImpl("testName2", "testOwner2");
 
         plaza.addShop(shop1);
         plaza.addShop(shop2);

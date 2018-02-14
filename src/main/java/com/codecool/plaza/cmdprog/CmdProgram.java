@@ -72,6 +72,18 @@ public class CmdProgram {
     }
 
     private void enterShop(PlazaImpl plaza) {
+        try {
+            ShopImpl shop = selectShop(plaza);
+            shopMenu(shop);
+        } catch (PlazaIsClosedException e) {
+            System.out.println(texts.plazaIsClosed);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println(texts.noSuchShop);
+        }
+    }
+
+    private void shopMenu(ShopImpl shop) {
+        displayMenu(texts.shopMenuTitle(shop), texts.shopMenuOptions);
     }
 
     private void removeShop(PlazaImpl plaza) {
@@ -86,8 +98,8 @@ public class CmdProgram {
         }
     }
 
-    private Shop selectShop(PlazaImpl plaza) throws PlazaIsClosedException, IndexOutOfBoundsException {
-        List<Shop> shops = plaza.getShops();
+    private ShopImpl selectShop(PlazaImpl plaza) throws PlazaIsClosedException, IndexOutOfBoundsException {
+        List<ShopImpl> shops = plaza.getShops();
         String[] shopArray = new String[shops.size()];
         int counter = 0;
         for (Shop shop : shops) {
@@ -111,7 +123,7 @@ public class CmdProgram {
         String name = userInput.nextLine();
         System.out.println(texts.enterShopOwner);
         String owner = userInput.nextLine();
-        Shop shop = new ShopImpl(name, owner);
+        ShopImpl shop = new ShopImpl(name, owner);
         try {
             plaza.addShop(shop);
         } catch (ShopAlreadyExistsException e) {
@@ -143,7 +155,7 @@ public class CmdProgram {
     }
 
     private void listShops(PlazaImpl plaza) {
-        List<Shop> shops;
+        List<ShopImpl> shops;
         try {
             shops = plaza.getShops();
         } catch (PlazaIsClosedException e) {
@@ -201,6 +213,22 @@ public class CmdProgram {
                 "Open the plaza",
                 "Close the plaza",
                 "Check if the plaza is open or not"
+        };
+
+        String shopMenuTitle(ShopImpl shop) {
+            return "You are in " + shop.getName() + " shop! Choose a command.";
+        }
+
+        final String[] shopMenuOptions = new String[]{
+                "Back to plaza",
+                "List available products",
+                "Find products by name",
+                "Display shop's owner",
+                "Open shop",
+                "Close shop",
+                "Add new product to the shop",
+                "Add existing products to the shop",
+                "Buy a product by barcode"
         };
 
         final String plazaIsClosed = "Plaza is closed!";

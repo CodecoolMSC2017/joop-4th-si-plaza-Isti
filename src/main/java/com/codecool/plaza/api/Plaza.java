@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface Plaza {
 
-    public List<Shop> getShops() throws PlazaIsClosedException;
+    public List<ShopImpl> getShops() throws PlazaIsClosedException;
 
-    public void addShop(Shop shop) throws ShopAlreadyExistsException, PlazaIsClosedException;
+    public void addShop(ShopImpl shop) throws ShopAlreadyExistsException, PlazaIsClosedException;
 
     public void removeShop(Shop shop) throws NoSuchShopException, PlazaIsClosedException;
 

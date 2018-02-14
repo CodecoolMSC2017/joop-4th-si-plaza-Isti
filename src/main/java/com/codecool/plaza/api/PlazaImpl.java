@@ -6,12 +6,12 @@ import java.util.List;
 public class PlazaImpl implements Plaza {
 
     private String name;
-    private List<Shop> shops;
+    private List<ShopImpl> shops;
     private boolean isOpen;
 
     public PlazaImpl(String name) {
         this.name = name;
-        shops = new ArrayList<Shop>();
+        shops = new ArrayList<ShopImpl>();
         isOpen = true;
     }
 
@@ -19,14 +19,14 @@ public class PlazaImpl implements Plaza {
         return name;
     }
 
-    public List<Shop> getShops() throws PlazaIsClosedException {
+    public List<ShopImpl> getShops() throws PlazaIsClosedException {
         if (!isOpen) {
             throw new PlazaIsClosedException();
         }
         return shops;
     }
 
-    public void addShop(Shop shop) throws ShopAlreadyExistsException, PlazaIsClosedException {
+    public void addShop(ShopImpl shop) throws ShopAlreadyExistsException, PlazaIsClosedException {
         if (!isOpen) {
             throw new PlazaIsClosedException();
         }
