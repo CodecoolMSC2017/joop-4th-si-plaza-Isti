@@ -5,12 +5,18 @@ import java.util.List;
 
 public class PlazaImpl implements Plaza {
 
+    private String name;
     private List<Shop> shops;
     private boolean isOpen;
 
-    public PlazaImpl() {
+    public PlazaImpl(String name) {
+        this.name = name;
         shops = new ArrayList<Shop>();
         isOpen = true;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public List<Shop> getShops() throws PlazaIsClosedException {
