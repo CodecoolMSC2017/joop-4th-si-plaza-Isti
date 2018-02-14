@@ -11,7 +11,7 @@ class PlazaImplTest {
 
     @BeforeEach
     void setUp() {
-        plaza = new PlazaImpl();
+        plaza = new PlazaImpl("testName");
     }
 
     @Test
