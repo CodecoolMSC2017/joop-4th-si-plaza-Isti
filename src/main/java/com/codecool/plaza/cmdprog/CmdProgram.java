@@ -73,6 +73,10 @@ public class CmdProgram {
 
     private void enterShop(PlazaImpl plaza) {
         try {
+            if (plaza.getShops().size() == 0) {
+                System.out.println(texts.noShops);
+                return;
+            }
             ShopImpl shop = selectShop(plaza);
             shopMenu(shop);
         } catch (PlazaIsClosedException e) {
@@ -83,11 +87,40 @@ public class CmdProgram {
     }
 
     private void shopMenu(ShopImpl shop) {
-        displayMenu(texts.shopMenuTitle(shop), texts.shopMenuOptions);
+        label:
+        while (true) {
+            displayMenu(texts.shopMenuTitle(shop), texts.shopMenuOptions);
+            String choice = userInput.nextLine();
+            switch (choice) {
+                case "0":
+                    break label;
+                case "1":
+                    break;
+                case "2":
+                    break;
+                case "3":
+                    break;
+                case "4":
+                    break;
+                case "5":
+                    break;
+                case "6":
+                    break;
+                case "7":
+                    break;
+                default:
+                    System.out.println(texts.unknownCommandMessage);
+                    break;
+            }
+        }
     }
 
     private void removeShop(PlazaImpl plaza) {
         try {
+            if (plaza.getShops().size() == 0) {
+                System.out.println(texts.noShops);
+                return;
+            }
             Shop shop = selectShop(plaza);
             plaza.removeShop(shop);
             System.out.println(texts.shopRemoved);
@@ -209,7 +242,7 @@ public class CmdProgram {
                 "List all shops",
                 "Add a new shop",
                 "Remove an existing shop",
-                "Enter a shop by name",
+                "Enter a shop",
                 "Open the plaza",
                 "Close the plaza",
                 "Check if the plaza is open or not"
