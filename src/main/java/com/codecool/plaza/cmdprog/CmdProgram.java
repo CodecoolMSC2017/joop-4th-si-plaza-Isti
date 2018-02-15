@@ -131,10 +131,10 @@ public class CmdProgram {
 
     private void buyProduct(ShopImpl shop) {
         System.out.println(texts.enterBarcode);
-        Long barcode = userInput.nextLong();
+        Long barcode = Long.parseLong(userInput.nextLine());
 
         System.out.println(texts.enterQuantity);
-        int quantity = userInput.nextInt();
+        int quantity = Integer.parseInt(userInput.nextLine());
 
         try {
             if (quantity == 1) {
@@ -153,10 +153,10 @@ public class CmdProgram {
 
     private void addExistingProduct(ShopImpl shop) {
         System.out.println(texts.enterBarcode);
-        Long barcode = userInput.nextLong();
+        Long barcode = Long.parseLong(userInput.nextLine());
 
         System.out.println(texts.enterQuantity);
-        int quantity = userInput.nextInt();
+        int quantity = Integer.parseInt(userInput.nextLine());
 
         try {
             shop.addProduct(barcode, quantity);
@@ -202,7 +202,7 @@ public class CmdProgram {
         String name = userInput.nextLine();
 
         System.out.println(texts.enterBarcode);
-        Long barcode = userInput.nextLong();
+        Long barcode = Long.parseLong(userInput.nextLine());
 
         System.out.println(texts.enterManufacturer);
         String manufacturer = userInput.nextLine();
@@ -218,10 +218,10 @@ public class CmdProgram {
 
     private void addProduct(ShopImpl shop, Product product) throws ProductAlreadyExistsException, ShopIsClosedException {
         System.out.println(texts.enterQuantity);
-        int quantity = userInput.nextInt();
+        int quantity = Integer.parseInt(userInput.nextLine());
 
         System.out.println(texts.enterPrice);
-        float price = userInput.nextFloat();
+        float price = Float.parseFloat(userInput.nextLine());
 
         shop.addNewProduct(product, quantity, price);
     }
@@ -231,13 +231,13 @@ public class CmdProgram {
         String name = userInput.nextLine();
 
         System.out.println(texts.enterBarcode);
-        Long barcode = userInput.nextLong();
+        Long barcode = Long.parseLong(userInput.nextLine());
 
         System.out.println(texts.enterManufacturer);
         String manufacturer = userInput.nextLine();
 
         System.out.println(texts.enterCalories);
-        int calories = userInput.nextInt();
+        int calories = Integer.parseInt(userInput.nextLine());
 
         System.out.println(texts.enterBestBefore);
         String date = userInput.nextLine();
