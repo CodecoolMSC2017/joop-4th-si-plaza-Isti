@@ -22,7 +22,11 @@ public class ShopImpl implements Shop {
         return owner;
     }
 
-    public Map<Long, ShopEntry> getProducts() {
+    public Map<Long, Product> getProducts() {
+        Map<Long, Product> products = new HashMap<>();
+        for (Long barcode : this.products.keySet()) {
+            products.put(barcode, this.products.get(barcode).getProduct());
+        }
         return products;
     }
 
