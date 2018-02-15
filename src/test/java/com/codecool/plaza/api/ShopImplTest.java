@@ -78,10 +78,10 @@ class ShopImplTest {
         assertThrows(NoSuchProductException.class, () -> {
             shop.addProduct(123456789L, 1);
         });
-        assertEquals(2, shop.getProducts().get(987123654L).getQuantity());
+        assertEquals(2, shop.getProductsEntry().get(987123654L).getQuantity());
 
         shop.addProduct(987123654L, 3);
-        assertEquals(5, shop.getProducts().get(987123654L).getQuantity());
+        assertEquals(5, shop.getProductsEntry().get(987123654L).getQuantity());
 
         shop.close();
         assertThrows(ShopIsClosedException.class, () -> {
@@ -92,12 +92,12 @@ class ShopImplTest {
     @Test
     void buyProduct() throws ProductAlreadyExistsException, ShopIsClosedException, NoSuchProductException, OutOfStockException {
         shop.addNewProduct(product, 1, 130);
-        assertEquals(1, shop.getProducts().get(987123654L).getQuantity());
+        assertEquals(1, shop.getProductsEntry().get(987123654L).getQuantity());
 
         Product boughtProduct = null;
         boughtProduct = shop.buyProduct(987123654L);
         assertEquals(product, boughtProduct);
-        assertEquals(0, shop.getProducts().get(987123654L).getQuantity());
+        assertEquals(0, shop.getProductsEntry().get(987123654L).getQuantity());
 
         assertThrows(OutOfStockException.class, () -> {
             shop.buyProduct(987123654L);

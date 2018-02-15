@@ -22,6 +22,10 @@ public class ShopImpl implements Shop {
         return owner;
     }
 
+    public Map<Long, ShopEntry> getProductsEntry() {
+        return products;
+    }
+
     public Map<Long, Product> getProducts() {
         Map<Long, Product> products = new HashMap<>();
         for (Long barcode : this.products.keySet()) {
