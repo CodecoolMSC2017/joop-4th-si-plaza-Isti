@@ -2,7 +2,11 @@ package com.codecool.plaza.cmdprog;
 
 import com.codecool.plaza.api.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class CmdProgram {
@@ -95,23 +99,196 @@ public class CmdProgram {
                 case "0":
                     break label;
                 case "1":
+                    listProducts(shop);
                     break;
                 case "2":
+                    findProductByName(shop);
                     break;
                 case "3":
+                    displayShopOwner(shop);
                     break;
                 case "4":
+                    openShop(shop);
                     break;
                 case "5":
+                    closeShop(shop);
                     break;
                 case "6":
+                    addNewProduct(shop);
                     break;
                 case "7":
+                    addExistingProduct(shop);
+                    break;
+                case "8":
+                    buyProduct(shop);
                     break;
                 default:
                     System.out.println(texts.unknownCommandMessage);
                     break;
             }
+        }
+    }
+
+    private void buyProduct(ShopImpl shop) {
+        System.out.println(texts.enterBarcode);
+        Long barcode = userInput.nextLong();
+
+        System.out.println(texts.enterQuantity);
+        int quantity = userInput.nextInt();
+
+        try {
+            if (quantity == 1) {
+                cart.add(shop.buyProduct(barcode));
+            } else if (quantity == 2) {
+                cart.addAll(shop.buyProducts(barcode, quantity));
+            }
+        } catch (NoSuchProductException e) {
+            System.out.println(texts.noSuchProduct);
+        } catch (ShopIsClosedException e) {
+            System.out.println(texts.shopIsClosed);
+        } catch (OutOfStockException e) {
+            System.out.println(texts.outOfStock);
+        }
+    }
+
+    private void addExistingProduct(ShopImpl shop) {
+        System.out.println(texts.enterBarcode);
+        Long barcode = userInput.nextLong();
+
+        System.out.println(texts.enterQuantity);
+        int quantity = userInput.nextInt();
+
+        try {
+            shop.addProduct(barcode, quantity);
+        } catch (NoSuchProductException e) {
+            System.out.println(texts.noSuchProduct);
+        } catch (ShopIsClosedException e) {
+            System.out.println(texts.shopIsClosed);
+        }
+    }
+
+    private void addNewProduct(ShopImpl shop) {
+        Product product;
+        while (true) {
+            System.out.println(texts.chooseProductType);
+            String choice = userInput.nextLine();
+            switch (choice) {
+                case "1":
+                    product = createFoodProduct();
+                    break;
+                case "2":
+                    product = createClothingProduct();
+                    break;
+                default:
+                    System.out.println(texts.unknownCommandMessage);
+                    continue;
+            }
+            if (product != null) {
+                try {
+                    addProduct(shop, product);
+                } catch (ProductAlreadyExistsException e) {
+                    System.out.println(texts.productAlreadyExists);
+                } catch (ShopIsClosedException e) {
+                    System.out.println(texts.shopIsClosed);
+                }
+            }
+            break;
+        }
+
+    }
+
+    private Product createClothingProduct() {
+        System.out.println(texts.enterProductName);
+        String name = userInput.nextLine();
+
+        System.out.println(texts.enterBarcode);
+        Long barcode = userInput.nextLong();
+
+        System.out.println(texts.enterManufacturer);
+        String manufacturer = userInput.nextLine();
+
+        System.out.println(texts.enterMaterial);
+        String material = userInput.nextLine();
+
+        System.out.println(texts.enterType);
+        String type = userInput.nextLine();
+
+        return new ClothingProduct(name, barcode, manufacturer, material, type);
+    }
+
+    private void addProduct(ShopImpl shop, Product product) throws ProductAlreadyExistsException, ShopIsClosedException {
+        System.out.println(texts.enterQuantity);
+        int quantity = userInput.nextInt();
+
+        System.out.println(texts.enterPrice);
+        float price = userInput.nextFloat();
+
+        shop.addNewProduct(product, quantity, price);
+    }
+
+    private Product createFoodProduct() {
+        System.out.println(texts.enterProductName);
+        String name = userInput.nextLine();
+
+        System.out.println(texts.enterBarcode);
+        Long barcode = userInput.nextLong();
+
+        System.out.println(texts.enterManufacturer);
+        String manufacturer = userInput.nextLine();
+
+        System.out.println(texts.enterCalories);
+        int calories = userInput.nextInt();
+
+        System.out.println(texts.enterBestBefore);
+        String date = userInput.nextLine();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        Date bestBefore;
+        try {
+            bestBefore = sdf.parse(date);
+        } catch (ParseException e) {
+            System.out.println(texts.wrongInput);
+            return null;
+        }
+
+        return new FoodProduct(name, barcode, manufacturer, calories, bestBefore);
+    }
+
+    private void findProductByName(ShopImpl shop) {
+        System.out.println(texts.enterProductName);
+        List<Product> products;
+        try {
+            products = shop.findByName(userInput.nextLine());
+        } catch (ShopIsClosedException e) {
+            System.out.println(texts.shopIsClosed);
+            return;
+        }
+        if (products.size() == 0) {
+            System.out.println(texts.noProducts);
+            return;
+        }
+        for (Product product : products) {
+            System.out.println(product);
+        }
+    }
+
+    private void displayShopOwner(ShopImpl shop) {
+        System.out.println("Owner: " + shop.getOwner());
+    }
+
+    private void closeShop(ShopImpl shop) {
+        shop.close();
+        System.out.println(texts.shopIsClosed);
+    }
+
+    private void openShop(ShopImpl shop) {
+        shop.close();
+        System.out.println(texts.shopIsOpen);
+    }
+
+    private void listProducts(ShopImpl shop) {
+        Map<Long, Product> products = shop.getProducts();
+        for (Long barcode : products.keySet()) {
+            System.out.println("Barcode: " + barcode + products.get(barcode));
         }
     }
 
@@ -219,7 +396,6 @@ public class CmdProgram {
     }
 
     class Texts {
-        final String noTitle = "";
         final String[] noOptions = new String[0];
 
         final String mainMenuTitle = "Welcome! You have to create a plaza to start.";
@@ -276,5 +452,29 @@ public class CmdProgram {
         final String notANumber = "Not a number!";
         final String noSuchShop = "There is no such shop!";
         final String shopRemoved = "Shop removed!";
+
+        final String shopIsClosed = "Shop is closed!";
+        final String shopIsOpen = "Shop is open!";
+        final String enterProductName = "Enter the name of the product:";
+        final String noProducts = "No products found";
+
+        final String chooseProductType = "Choose a type: Food (1), Clothes (2)";
+
+        final String enterBarcode = "Enter barcode:";
+        final String enterManufacturer = "Enter manufacturer:";
+        final String enterCalories = "Enter calories:";
+        final String enterBestBefore = "Best before: (yyyy/mm/dd)";
+        final String wrongInput = "Wrong input!";
+
+        final String enterQuantity = "Enter quantity:";
+        final String enterPrice = "Enter price:";
+
+        final String productAlreadyExists = "Product already exists!";
+
+        final String enterMaterial = "Enter material:";
+        final String enterType = "Enter the type:";
+
+        final String noSuchProduct = "There is no such product!";
+        final String outOfStock = "Out of stock!";
     }
 }
