@@ -40,9 +40,7 @@ class ShopImplTest {
         assertEquals(product, products.get(0));
 
         shop.close();
-        assertThrows(ShopIsClosedException.class, () -> {
-            shop.findByName("");
-        });
+        assertThrows(ShopIsClosedException.class, () -> shop.findByName(""));
     }
 
     @Test
@@ -52,41 +50,31 @@ class ShopImplTest {
         assertTrue(shop.hasProduct(987123654L));
 
         shop.close();
-        assertThrows(ShopIsClosedException.class, () -> {
-            shop.hasProduct(987123654L);
-        });
+        assertThrows(ShopIsClosedException.class, () -> shop.hasProduct(987123654L));
     }
 
     @Test
     void addNewProduct() throws ProductAlreadyExistsException, ShopIsClosedException {
         shop.addNewProduct(product, 2, 150);
 
-        assertThrows(ProductAlreadyExistsException.class, () -> {
-            shop.addNewProduct(product, 50, 2000);
-        });
+        assertThrows(ProductAlreadyExistsException.class, () -> shop.addNewProduct(product, 50, 2000));
 
         shop.close();
-        assertThrows(ShopIsClosedException.class, () -> {
-            shop.addNewProduct(product, 2, 150);
-        });
+        assertThrows(ShopIsClosedException.class, () -> shop.addNewProduct(product, 2, 150));
     }
 
     @Test
     void addProduct() throws ProductAlreadyExistsException, ShopIsClosedException, NoSuchProductException {
         shop.addNewProduct(product, 2, 150);
         assertEquals(1, shop.findByName("cloth").size());
-        assertThrows(NoSuchProductException.class, () -> {
-            shop.addProduct(123456789L, 1);
-        });
+        assertThrows(NoSuchProductException.class, () -> shop.addProduct(123456789L, 1));
         assertEquals(2, shop.getProductsEntry().get(987123654L).getQuantity());
 
         shop.addProduct(987123654L, 3);
         assertEquals(5, shop.getProductsEntry().get(987123654L).getQuantity());
 
         shop.close();
-        assertThrows(ShopIsClosedException.class, () -> {
-            shop.addProduct(123456789L, 1);
-        });
+        assertThrows(ShopIsClosedException.class, () -> shop.addProduct(123456789L, 1));
     }
 
     @Test
@@ -94,23 +82,17 @@ class ShopImplTest {
         shop.addNewProduct(product, 1, 130);
         assertEquals(1, shop.getProductsEntry().get(987123654L).getQuantity());
 
-        Product boughtProduct = null;
+        Product boughtProduct;
         boughtProduct = shop.buyProduct(987123654L);
         assertEquals(product, boughtProduct);
         assertEquals(0, shop.getProductsEntry().get(987123654L).getQuantity());
 
-        assertThrows(OutOfStockException.class, () -> {
-            shop.buyProduct(987123654L);
-        });
+        assertThrows(OutOfStockException.class, () -> shop.buyProduct(987123654L));
 
-        assertThrows(NoSuchProductException.class, () -> {
-            shop.buyProduct(123456789L);
-        });
+        assertThrows(NoSuchProductException.class, () -> shop.buyProduct(123456789L));
 
         shop.close();
-        assertThrows(ShopIsClosedException.class, () -> {
-            shop.buyProduct(987123654L);
-        });
+        assertThrows(ShopIsClosedException.class, () -> shop.buyProduct(987123654L));
     }
 
     @Test
@@ -121,27 +103,19 @@ class ShopImplTest {
         assertEquals(product, boughtProducts.get(0));
         assertEquals(1, boughtProducts.size());
 
-        assertThrows(OutOfStockException.class, () -> {
-            shop.buyProducts(987123654L, 3);
-        });
+        assertThrows(OutOfStockException.class, () -> shop.buyProducts(987123654L, 3));
 
         boughtProducts = shop.buyProducts(987123654L, 2);
         assertEquals(product, boughtProducts.get(0));
         assertEquals(product, boughtProducts.get(1));
         assertEquals(2, boughtProducts.size());
 
-        assertThrows(OutOfStockException.class, () -> {
-            shop.buyProducts(987123654L, 1);
-        });
+        assertThrows(OutOfStockException.class, () -> shop.buyProducts(987123654L, 1));
 
-        assertThrows(NoSuchProductException.class, () -> {
-            shop.buyProducts(123456789L, 2);
-        });
+        assertThrows(NoSuchProductException.class, () -> shop.buyProducts(123456789L, 2));
 
         shop.close();
-        assertThrows(ShopIsClosedException.class, () -> {
-            shop.buyProducts(987123654L, 2);
-        });
+        assertThrows(ShopIsClosedException.class, () -> shop.buyProducts(987123654L, 2));
     }
 
 }

@@ -19,9 +19,7 @@ class PlazaImplTest {
         ShopImpl shop = new ShopImpl("testName", "testOwner");
 
         plaza.close();
-        assertThrows(PlazaIsClosedException.class, () -> {
-            plaza.addShop(shop);
-        });
+        assertThrows(PlazaIsClosedException.class, () -> plaza.addShop(shop));
         plaza.open();
 
         assertEquals(0, plaza.getShops().size());
@@ -29,9 +27,7 @@ class PlazaImplTest {
         assertEquals(shop, plaza.getShops().get(0));
         assertEquals(1, plaza.getShops().size());
 
-        assertThrows(ShopAlreadyExistsException.class, () -> {
-            plaza.addShop(shop);
-        });
+        assertThrows(ShopAlreadyExistsException.class, () -> plaza.addShop(shop));
     }
 
     @Test
@@ -41,18 +37,14 @@ class PlazaImplTest {
         plaza.addShop(shop1);
 
         plaza.close();
-        assertThrows(PlazaIsClosedException.class, () -> {
-            plaza.removeShop(shop1);
-        });
+        assertThrows(PlazaIsClosedException.class, () -> plaza.removeShop(shop1));
         plaza.open();
 
         assertEquals(1, plaza.getShops().size());
         plaza.removeShop(shop1);
         assertEquals(0, plaza.getShops().size());
 
-        assertThrows(NoSuchShopException.class, () -> {
-            plaza.removeShop(shop1);
-        });
+        assertThrows(NoSuchShopException.class, () -> plaza.removeShop(shop1));
 
         assertEquals(0, plaza.getShops().size());
         plaza.addShop(shop1);
@@ -73,9 +65,7 @@ class PlazaImplTest {
         plaza.addShop(shop2);
 
         assertEquals(shop1, plaza.findShopByName("testName1"));
-        assertThrows(NoSuchShopException.class, () -> {
-            plaza.findShopByName("totallyRandomName");
-        });
+        assertThrows(NoSuchShopException.class, () -> plaza.findShopByName("totallyRandomName"));
         assertEquals(shop2, plaza.findShopByName("testName2"));
     }
 
